@@ -1,0 +1,269 @@
+                /* Reset CSS - menghapus style default browser */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Style untuk body - mengatur font dan background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Container utama - membungkus semua konten */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header section - bagian atas dengan foto dan info utama */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+
+        /* Animasi slide down untuk header */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Style untuk foto profil */
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 5px solid #667eea;
+            background: #f0f0f0;
+            overflow: hidden;
+}
+
+        /* Style untuk gambar di dalam profile-img */
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Efek hover pada foto profil */
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Style untuk nama */
+        .name {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Style untuk jabatan */
+        .title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Style untuk deskripsi singkat */
+        .description {
+            font-size: 1.1em;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid layout untuk section konten */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Style untuk setiap card/section */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Efek hover pada card */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Animasi fade in up untuk card */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Style untuk judul section */
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        /* Style untuk list skill */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Style untuk setiap skill tag */
+        .skill-tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: transform 0.2s ease;
+        }
+
+        /* Efek hover pada skill tag */
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* Style untuk item pengalaman */
+        .experience-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 3px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* Style untuk judul pekerjaan */
+        .job-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        /* Style untuk nama perusahaan */
+        .company {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        /* Style untuk periode kerja */
+        .period {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        /* Style untuk info kontak */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Style untuk setiap item kontak */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        /* Efek hover pada item kontak */
+        .contact-item:hover {
+            background: #e8f0ff;
+        }
+
+        /* Style untuk tombol download CV */
+        .download-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Efek hover pada tombol download */
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive design untuk tablet */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .name {
+                font-size: 2em;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        /* Responsive design untuk mobile */
+        @media (max-width: 480px) {
+            .profile-img {
+                width: 120px;
+                height: 120px;
+                font-size: 50px;
+            }
+            
+            .name {
+                font-size: 1.8em;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }

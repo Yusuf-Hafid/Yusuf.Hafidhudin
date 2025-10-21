@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio - Yusuf Hafidhudin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Container utama yang membungkus semua konten -->
+    <div class="container">
+        <!-- Header section dengan foto profil dan info  utama -->
+        <div class="header">
+            <!-- Foto profil pribadi -->
+            <div class="profile-img">
+                <!-- Ganti "foto-saya.jpg" dengan nama file foto Anda -->
+                <img src="Yusuf.jpg" alt="gambar 1" onerror="this.style.display='none'; this.parentElement.innerHTML='👨‍💻'; this.parentElement.style.display='flex'; this.parentElement.style.alignItems='center'; this.parentElement.style.justifyContent='center'; this.parentElement.style.fontSize='60px';">
+            </div>
+            <!-- Nama lengkap -->
+            <h1 class="name">Yusuf Hafidhudin</h1>
+            <!-- Jabatan/posisi -->
+            <p class="title">Programmer</p>
+            <!-- Deskripsi singkat tentang diri -->
+            <p class="description">
+                Saya adalah seorang programmer muda, saya memiliki pengalaman
+                selama 3+ bulan, saya pernah membuat suatu portofolio sederhana, 
+                dan saya sangat suka menjelajahi dunia digital ini.
+            </p>
+        </div>
+
+        <!-- Grid layout untuk konten utama -->
+        <div class="content-grid">
+            <!-- Card untuk menampilkan keahlian/skills -->
+            <div class="card">
+                <h2>🚀 Keahlian</h2>
+                <div class="skills-list">
+                    <span class="skill-tag">HTML5</span>
+                    <span class="skill-tag">CSS3</span>
+                </div>
+            </div>
+
+            <!-- Card untuk menampilkan pengalaman kerja -->
+            <div class="card">
+                <h2>💼 Pengalaman</h2>
+                <div class="experience-item">
+                    <div class="job-title">Beginner programmer</div>
+                    <div class="period">2025 - Sekarang</div>
+                    <p>Membuat sebuah website adalah tugas saya sebagai Programmer</p>
+                </div>
+                <div class="experience-item">
+                    <div class="job-title">Beginner Web Developer</div>
+                    <div class="company"></div>
+                    <div class="period">2025 - Sekarang</div>
+                    <p>Membuat website portofolio</p>
+                </div>
+            </div>
+
+            <!-- Card untuk menampilkan pendidikan -->
+            <div class="card">
+                <h2>🎓 Pendidikan</h2>
+                <div class="experience-item">
+                    <div class="job-title">MTS Ma'had Al-Zaytun</div>
+                    <!-- <div class="company"></div> -->
+                    <div class="period">2024 - 2026</div>
+                    <p>IPK - Membuat suatu website dan mempublikasikannya ke khalayak umum (Public)</p>
+                </div>
+            </div>
+
+            <!-- Card untuk informasi kontak -->
+            <div class="card">
+                <h2>📞 Kontak</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>yusufhudin504@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Jakarta, Indonesia</span>
+                    </div>
+                </div>
+                <!-- Tombol download CV -->
+                <button class="download-btn" onclick="downloadCV()">
+                    📄 Download CV
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
