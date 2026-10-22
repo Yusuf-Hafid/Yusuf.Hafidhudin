@@ -241,15 +241,28 @@ body {
   padding-left: 4px;
 }
 
-/* Logo Instagram (SVG inline): ukuran & warna selaras isi card;
+/* Logo kontak (SVG inline): ukuran & warna selaras isi card;
    display block menghilangkan ruang baseline inline yang menggeser
    garis tengah ikon relatif terhadap teksnya. */
-.contact-item svg.ig-logo {
+.contact-item svg.ig-logo,
+.contact-item svg.github-logo {
   display: block;
   width: 18px;
   height: 18px;
   color: var(--color-primary);
   flex-shrink: 0;
+}
+
+/* Tautan baris kontak (compose Gmail untuk email, URL profil
+   Instagram/GitHub): warna teks biasa agar selaras card, garis
+   bawah muncul saat hover agar tetap terlihat sebagai tautan */
+.contact-item a.contact-link {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.contact-item a.contact-link:hover {
+  text-decoration: underline;
 }
 
 /* Style untuk tombol download CV */
