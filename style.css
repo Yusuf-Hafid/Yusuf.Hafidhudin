@@ -5,12 +5,24 @@
   box-sizing: border-box;
 }
 
+/* CSS Custom Properties - palet warna yang benar-benar berulang.
+   Nilai yang hanya dipakai satu kali (mis. #e8f0ff, rgba shadow)
+   sengaja dibiarkan literal agar tidak over-abstraksi. */
+:root {
+  --color-primary: #667eea;    /* warna aksen utama (judul, border, gradien) */
+  --color-secondary: #764ba2;  /* warna akhir gradien utama */
+  --color-text: #333;          /* teks utama */
+  --color-text-muted: #666;    /* teks sekunder */
+  --color-surface: #ffffff;    /* latar header & card */
+  --color-surface-alt: #f8f9ff;/* latar item pengalaman & kontak */
+}
+
 /* Style untuk body - mengatur font dan background */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--color-text);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   min-height: 100vh;
 }
 
@@ -23,7 +35,7 @@ body {
 
 /* Header section - bagian atas dengan foto dan info utama */
 .header {
-  background: white;
+  background: var(--color-surface);
   border-radius: 20px;
   padding: 40px;
   text-align: center;
@@ -50,7 +62,7 @@ body {
   height: 150px;
   border-radius: 50%;
   margin: 0 auto 20px;
-  border: 5px solid #667eea;
+  border: 5px solid var(--color-primary);
   background: #f0f0f0;
   overflow: hidden;
 }
@@ -71,7 +83,7 @@ body {
 /* Style untuk nama */
 .name {
   font-size: 2.5em;
-  color: #333;
+  color: var(--color-text);
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -79,7 +91,7 @@ body {
 /* Style untuk jabatan */
 .title {
   font-size: 1.3em;
-  color: #667eea;
+  color: var(--color-primary);
   margin-bottom: 20px;
   font-weight: 500;
 }
@@ -87,7 +99,7 @@ body {
 /* Style untuk deskripsi singkat */
 .description {
   font-size: 1.1em;
-  color: #666;
+  color: var(--color-text-muted);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -102,7 +114,7 @@ body {
 
 /* Style untuk setiap card/section */
 .card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -132,10 +144,10 @@ body {
 
 /* Style untuk judul section */
 .card h2 {
-  color: #333;
+  color: var(--color-text);
   margin-bottom: 20px;
   font-size: 1.5em;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 10px;
 }
 
@@ -148,7 +160,7 @@ body {
 
 /* Style untuk setiap skill tag */
 .skill-tag {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
@@ -165,27 +177,27 @@ body {
 .experience-item {
   margin-bottom: 20px;
   padding: 15px;
-  border-left: 3px solid #667eea;
-  background: #f8f9ff;
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-surface-alt);
   border-radius: 0 10px 10px 0;
 }
 
 /* Style untuk judul pekerjaan */
 .job-title {
   font-weight: bold;
-  color: #333;
+  color: var(--color-text);
   font-size: 1.1em;
 }
 
 /* Style untuk nama perusahaan */
 .company {
-  color: #667eea;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
 /* Style untuk periode kerja */
 .period {
-  color: #666;
+  color: var(--color-text-muted);
   font-size: 0.9em;
   margin: 5px 0;
 }
@@ -203,8 +215,9 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background: #f8f9ff;
+  background: var(--color-surface-alt);
   border-radius: 10px;
+  overflow-wrap: break-word;
   transition: background 0.3s ease;
 }
 
@@ -215,7 +228,7 @@ body {
 
 /* Style untuk tombol download CV */
 .download-btn {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
   color: white;
   padding: 15px 30px;
   border: none;
@@ -267,5 +280,16 @@ body {
 
   .card {
     padding: 20px;
+  }
+}
+
+/* Aksesibilitas: hormati preferensi pengguna yang mengurangi gerakan.
+   Mematikan animasi masuk dekoratif dari CSS; efek berbasis
+   JavaScript (parallax, tilt card, animasi skill tag) dinonaktifkan
+   dari sisi script.js agar tidak tertutup style inline. */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .card {
+    animation: none;
   }
 }

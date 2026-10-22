@@ -1,71 +1,157 @@
-// JavaScript untuk animasi dan interaktivitas
+// ============================================================
+// JavaScript untuk animasi dan interaktivitas portofolio
+// ============================================================
+// Script dimuat di akhir <body>, sehingga DOM sudah tersedia.
+// Seluruh inisialisasi dibungkus "DOMContentLoaded" agar titik
+// eksekusi tegas, dan semua kode berada dalam IIFE agar tidak
+// memenuhi global scope.
+(function () {
+  "use strict";
 
-// Fungsi untuk download CV (demo)
-function downloadCV() {
-  // Menampilkan alert karena ini hanya demo
-  alert("Fitur download CV akan tersedia setelah CV disiapkan!");
+  // Preferensi "reduce motion" dipakai untuk menonaktifkan efek
+  // gerakan dekoratif (aksesibilitas; selaras dengan style.css).
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-  // Dalam implementasi nyata, bisa menggunakan:
-  // window.open('path/to/cv.pdf', '_blank');
-}
+  // ------------------------------------------------------------
+  // Fungsi logika/interaksi
+  // ------------------------------------------------------------
 
-// Animasi untuk skill tags saat halaman dimuat
-document.addEventListener("DOMContentLoaded", function () {
-  // Mengambil semua elemen skill tag
-  const skillTags = document.querySelectorAll(".skill-tag");
+  // Fungsi untuk download CV (demo)
+  function downloadCV() {
+    // Menampilkan alert karena ini hanya demo
+    alert("Fitur download CV akan tersedia setelah CV disiapkan!");
 
-  // Memberikan delay animasi untuk setiap skill tag
-  skillTags.forEach((tag, index) => {
-    tag.style.animationDelay = `${index * 0.1}s`;
-    tag.style.animation = "fadeInUp 0.6s ease-out forwards";
-  });
-});
-
-// Smooth scroll effect untuk navigasi (jika ada)
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  });
-});
-
-// Efek parallax sederhana pada scroll
-window.addEventListener("scroll", function () {
-  const scrolled = window.pageYOffset;
-  const header = document.querySelector(".header");
-
-  // Memberikan efek parallax pada header
-  if (header) {
-    header.style.transform = `translateY(${scrolled * 0.1}px)`;
+    // Dalam implementasi nyata, bisa menggunakan:
+    // window.open('path/to/cv.pdf', '_blank');
   }
-});
 
-// Fungsi untuk menambah interaktivitas pada card
-const cards = document.querySelectorAll(".card");
-cards.forEach((card) => {
-  // Efek tilt saat mouse bergerak di atas card
-  card.addEventListener("mousemove", function (e) {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // ------------------------------------------------------------
+  // Inisialisasi per fitur
+  // ------------------------------------------------------------
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+  // Tombol download CV: pindahan dari onclick inline di HTML,
+  // perilaku (alert demo) dipertahankan sama dengan versi asli.
+  function initDownloadButton() {
+    const downloadButton = document.querySelector(".download-btn");
+    if (!downloadButton) return;
 
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
+    downloadButton.addEventListener("click", downloadCV);
+  }
 
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+  // Fallback foto profil: bila gambar gagal dimuat, sembunyikan <img>
+  // lalu tampilkan emoji sebagai pengganti (perilaku identik dengan
+  // handler onerror inline sebelumnya). Dijalankan maksimal satu kali
+  // agar tidak terjadi loop error bila fallback pun gagal.
+  function initProfileImageFallback() {
+    const profileImg = document.querySelector(".profile-img img");
+    if (!profileImg) return;
+
+    const showFallback = function () {
+      const wrapper = profileImg.parentElement;
+      if (!wrapper) return;
+
+      profileImg.style.display = "none";
+      wrapper.textContent = "👨‍💻";
+      wrapper.style.display = "flex";
+      wrapper.style.alignItems = "center";
+      wrapper.style.justifyContent = "center";
+      wrapper.style.fontSize = "60px";
+    };
+
+    profileImg.addEventListener("error", showFallback, { once: true });
+
+    // Jika gambar sudah selesai dimuat (dan gagal) sebelum listener
+    // terpasang, jalankan fallback secara langsung.
+    if (profileImg.complete && profileImg.naturalWidth === 0) {
+      showFallback();
+    }
+  }
+
+  // Animasi untuk skill tags saat halaman dimuat
+  function initSkillTagAnimation() {
+    // Lewati animasi dekoratif bila pengguna memilih mengurangi gerakan
+    if (prefersReducedMotion) return;
+
+    const skillTags = document.querySelectorAll(".skill-tag");
+
+    // Memberikan delay animasi untuk setiap skill tag
+    skillTags.forEach(function (tag, index) {
+      tag.style.animationDelay = `${index * 0.1}s`;
+      tag.style.animation = "fadeInUp 0.6s ease-out forwards";
+    });
+  }
+
+  // Smooth scroll effect untuk navigasi (jika ada anchor di halaman ini)
+  function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+    });
+  }
+
+  // Efek parallax sederhana pada scroll.
+  // Query dilakukan sekali di sini, bukan pada setiap event scroll.
+  function initParallaxEffect() {
+    // Efek dekoratif berbasis scroll — lewati bila reduce motion
+    if (prefersReducedMotion) return;
+
+    const header = document.querySelector(".header");
+    if (!header) return;
+
+    window.addEventListener("scroll", function () {
+      const scrolled = window.scrollY;
+      // Memberikan efek parallax pada header
+      header.style.transform = `translateY(${scrolled * 0.1}px)`;
+    });
+  }
+
+  // Fungsi untuk menambah interaktivitas pada card (efek tilt)
+  function initCardTiltEffect() {
+    if (prefersReducedMotion) return;
+
+    document.querySelectorAll(".card").forEach(function (card) {
+      // Efek tilt saat mouse bergerak di atas card
+      card.addEventListener("mousemove", function (e) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+      });
+
+      // Reset transform saat mouse keluar dari card
+      card.addEventListener("mouseleave", function () {
+        card.style.transform =
+          "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+      });
+    });
+  }
+
+  // ------------------------------------------------------------
+  // Titik masuk tunggal
+  // ------------------------------------------------------------
+  document.addEventListener("DOMContentLoaded", function () {
+    initSkillTagAnimation();
+    initSmoothScroll();
+    initParallaxEffect();
+    initCardTiltEffect();
+    initDownloadButton();
+    initProfileImageFallback();
   });
-
-  // Reset transform saat mouse keluar dari card
-  card.addEventListener("mouseleave", function () {
-    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
-  });
-});
+})();
