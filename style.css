@@ -226,6 +226,32 @@ body {
   background: #e8f0ff;
 }
 
+/* Kelompok label + baris kontak */
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Tulisan label di atas setiap baris kontak (Email / Instagram) */
+.contact-label {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-left: 4px;
+}
+
+/* Logo Instagram (SVG inline): ukuran & warna selaras isi card;
+   display block menghilangkan ruang baseline inline yang menggeser
+   garis tengah ikon relatif terhadap teksnya. */
+.contact-item svg.ig-logo {
+  display: block;
+  width: 18px;
+  height: 18px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
 /* Style untuk tombol download CV */
 .download-btn {
   background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
