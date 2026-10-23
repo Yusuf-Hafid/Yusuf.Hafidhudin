@@ -108,11 +108,56 @@
     const header = document.querySelector(".header");
     if (!header) return;
 
-    window.addEventListener("scroll", function () {
-      const scrolled = window.scrollY;
-      // Memberikan efek parallax pada header
-      header.style.transform = `translateY(${scrolled * 0.1}px)`;
-    });
+    // [DIUBAH] Dua penyebab stutter dihilangkan:
+    // 1) listener { passive: true } — browser tidak perlu menunggu JS
+    //    sebelum menggulir (scroll tidak lagi terasa "berat").
+    // 2) semua penulisan transform terjadi di satu loop
+    //    requestAnimationFrame (maksimal satu kali per frame).
+    let rafId = 0;
+    // [BARU] Lerp sederhana: target negatif = header bergerak ke ATAS
+    // saat scroll, sehingga tidak menutupi .content-grid di bawahnya.
+    // Posisi aktual didekati bertahap (~0.15 per frame) agar lompatan
+    // scrollY saat address bar Safari iOS menyusut/muncul tidak ikut
+    // melompat.
+    let currentY = 0;
+    let targetY = 0;
+    // [BARU] will-change dinamis: dipasang saat scroll mulai dan
+    // dilepas 150ms setelah animasi parallax benar-benar diam, agar
+    // layer GPU tidak hidup terus-menerus.
+    let willChangeTimer = 0;
+
+    function renderParallax() {
+      rafId = 0;
+      currentY += (targetY - currentY) * 0.15;
+      if (Math.abs(targetY - currentY) < 0.1) {
+        currentY = targetY;
+      }
+      // translate3d (jalur kompositor GPU) + Math.round (hindari posisi
+      // sub-piksel yang membuat tepi header terlihat bergetar).
+      header.style.transform = `translate3d(0, ${Math.round(currentY)}px, 0)`;
+      if (currentY !== targetY) {
+        rafId = window.requestAnimationFrame(renderParallax);
+        return;
+      }
+      willChangeTimer = window.setTimeout(function () {
+        header.style.willChange = "auto";
+      }, 150);
+    }
+
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (header.style.willChange !== "transform") {
+          header.style.willChange = "transform";
+        }
+        window.clearTimeout(willChangeTimer);
+        targetY = -(window.scrollY * 0.1);
+        if (!rafId) {
+          rafId = window.requestAnimationFrame(renderParallax);
+        }
+      },
+      { passive: true }
+    );
   }
 
   // Fungsi untuk menambah interaktivitas pada card (efek tilt)

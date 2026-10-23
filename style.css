@@ -17,13 +17,35 @@
   --color-surface-alt: #f8f9ff;/* latar item pengalaman & kontak */
 }
 
+/* [BARU] Latar kanvas HTML SOLID — canvas default browser berwarna
+   putih; tanpa ini area putih bocor saat overscroll/rubber-band dan
+   saat tile raster belum siap pada fast scroll (sumber flash putih).
+   overscroll-behavior-y: contain mempertahankan efek bounce khas iOS
+   tetapi tetap mematikan pull-to-refresh yang membocorkan warna
+   kanvas & menginterupsi momentum scroll. */
+html {
+  background-color: var(--color-primary);
+  overscroll-behavior-y: contain;
+}
+
 /* Style untuk body - mengatur font dan background */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: var(--color-text);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  /* [DIUBAH] shorthand `background:` mengosongkan background-color
+     (jadi transparan!); dipisah menjadi background-color solid +
+     background-image gradien agar tidak ada lubang transparan. */
+  background-color: var(--color-primary);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  /* [DIUBAH] 100dvh + fallback 100vh: address bar Safari iOS yang
+     menyusut/tumbuh tidak lagi membuat tinggi body melompat (CLS). */
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* Container utama - membungkus semua konten */
@@ -41,7 +63,11 @@ body {
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
-  animation: slideDown 1s ease-out;
+  /* [DIUBAH] 1s -> 0.3s: mempersempit jendela konflik dengan transform
+     parallax JS (CSS animation menang atas inline style selama durasi
+     animasi berjalan). will-change TIDAK lagi di sini — kini dikelola
+     dinamis oleh script.js (pasang saat scroll, lepas setelah idle). */
+  animation: slideDown 0.3s ease-out;
 }
 
 /* Animasi slide down untuk header */
