@@ -91,6 +91,11 @@ body {
   border: 5px solid var(--color-primary);
   background: #f0f0f0;
   overflow: hidden;
+  /* [BARU] Foto dipromosikan ke layer compositing sendiri agar
+     border-radius + overflow tidak di-raster ulang mengikuti layer
+     .header yang bergerak saat scroll (mencegah garis sub-piksel). */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Style untuk gambar di dalam profile-img */
