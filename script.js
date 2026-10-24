@@ -121,10 +121,6 @@
     // melompat.
     let currentY = 0;
     let targetY = 0;
-    // [BARU] will-change dinamis: dipasang saat scroll mulai dan
-    // dilepas 150ms setelah animasi parallax benar-benar diam, agar
-    // layer GPU tidak hidup terus-menerus.
-    let willChangeTimer = 0;
 
     function renderParallax() {
       rafId = 0;
@@ -139,18 +135,11 @@
         rafId = window.requestAnimationFrame(renderParallax);
         return;
       }
-      willChangeTimer = window.setTimeout(function () {
-        header.style.willChange = "auto";
-      }, 150);
     }
 
     window.addEventListener(
       "scroll",
       function () {
-        if (header.style.willChange !== "transform") {
-          header.style.willChange = "transform";
-        }
-        window.clearTimeout(willChangeTimer);
         targetY = -(window.scrollY * 0.1);
         if (!rafId) {
           rafId = window.requestAnimationFrame(renderParallax);

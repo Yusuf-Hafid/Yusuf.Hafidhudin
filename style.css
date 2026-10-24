@@ -26,6 +26,9 @@
 html {
   background-color: var(--color-primary);
   overscroll-behavior-y: contain;
+  /* [BARU] Reservasi lebar scrollbar agar .container (margin: 0 auto)
+     tidak bergeser horizontal saat scrollbar muncul/hilang. */
+  scrollbar-gutter: stable;
 }
 
 /* Style untuk body - mengatur font dan background */
@@ -50,9 +53,13 @@ body {
 
 /* Container utama - membungkus semua konten */
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  /* [BARU] Layer sendiri agar posisi hasil margin: 0 auto (sering
+     pecahan) tidak di-snap ulang saat repaint/compositing. */
+  transform: translateZ(0);
 }
 
 /* Header section - bagian atas dengan foto dan info utama */
@@ -65,9 +72,17 @@ body {
   margin-bottom: 30px;
   /* [DIUBAH] 1s -> 0.3s: mempersempit jendela konflik dengan transform
      parallax JS (CSS animation menang atas inline style selama durasi
-     animasi berjalan). will-change TIDAK lagi di sini — kini dikelola
-     dinamis oleh script.js (pasang saat scroll, lepas setelah idle). */
+     animasi berjalan). */
   animation: slideDown 0.3s ease-out;
+  /* [BARU] Kunci layer GPU permanen: jangan pernah didemote ke "auto"
+     setelah scroll berhenti, agar posisi X tidak di-snap ulang. */
+  will-change: transform;
+  /* [BARU] Promosikan .header sejak load (bukan saat scroll pertama)
+     agar rasterisasi layer tidak berubah/snap sub-piksel saat scroll.
+     Berlaku walau inline transform dari JS menimpa properti transform. */
+  backface-visibility: hidden;
+  /* [BARU] Stabilkan rasterisasi tepi layer saat transform berubah. */
+  outline: 1px solid transparent;
 }
 
 /* Animasi slide down untuk header */
