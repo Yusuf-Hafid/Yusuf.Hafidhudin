@@ -6,15 +6,16 @@
 }
 
 /* CSS Custom Properties - palet warna yang benar-benar berulang.
-   Nilai yang hanya dipakai satu kali (mis. #e8f0ff, rgba shadow)
+   Nilai yang hanya dipakai satu kali (mis. rgba border/glass)
    sengaja dibiarkan literal agar tidak over-abstraksi. */
 :root {
-  --color-primary: #667eea;    /* warna aksen utama (judul, border, gradien) */
-  --color-secondary: #764ba2;  /* warna akhir gradien utama */
-  --color-text: #333;          /* teks utama */
-  --color-text-muted: #666;    /* teks sekunder */
-  --color-surface: #ffffff;    /* latar header & card */
-  --color-surface-alt: #f8f9ff;/* latar item pengalaman & kontak */
+  --bg-main: #0b0f19;          /* latar halaman deep navy */
+  --bg-surface: #1e293b;       /* latar header & card */
+  --bg-surface-alt: #0f172a;   /* latar item pengalaman & kontak */
+  --color-primary: #6366f1;    /* aksen utama (judul, border, gradien) */
+  --color-secondary: #3b82f6;  /* aksen kedua (gradien) */
+  --color-text: #f8fafc;       /* teks utama */
+  --color-text-muted: #94a3b8; /* teks sekunder */
 }
 
 /* [BARU] Latar kanvas HTML SOLID — canvas default browser berwarna
@@ -24,7 +25,7 @@
    tetapi tetap mematikan pull-to-refresh yang membocorkan warna
    kanvas & menginterupsi momentum scroll. */
 html {
-  background-color: var(--color-primary);
+  background-color: var(--bg-main);
   overscroll-behavior-y: contain;
   /* [BARU] Reservasi lebar scrollbar agar .container (margin: 0 auto)
      tidak bergeser horizontal saat scrollbar muncul/hilang. */
@@ -38,15 +39,10 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: var(--color-text);
-  /* [DIUBAH] shorthand `background:` mengosongkan background-color
-     (jadi transparan!); dipisah menjadi background-color solid +
-     background-image gradien agar tidak ada lubang transparan. */
-  background-color: var(--color-primary);
-  background-image: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-secondary) 100%
-  );
+  /* [DIUBAH] Latar gelap solid; gradien lama dihapus agar kanvas
+     tetap bersih dan tidak ada lubang transparan saat overscroll. */
+  background-color: var(--bg-main);
+  background-image: none;
   /* [DIUBAH] 100dvh + fallback 100vh: address bar Safari iOS yang
      menyusut/tumbuh tidak lagi membuat tinggi body melompat (CLS). */
   min-height: 100vh;
@@ -65,11 +61,11 @@ body {
 
 /* Header section - bagian atas dengan foto dan info utama */
 .header {
-  background: var(--color-surface);
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 40px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
   /* [BARU] Promosikan .header sejak load (bukan saat scroll pertama)
      agar rasterisasi layer tidak berubah/snap sub-piksel saat scroll.
@@ -84,7 +80,7 @@ body {
   border-radius: 50%;
   margin: 0 auto 20px;
   border: 5px solid var(--color-primary);
-  background: #f0f0f0;
+  background: var(--bg-surface-alt);
   overflow: hidden;
 }
 
@@ -135,13 +131,13 @@ body {
 
 /* Style untuk setiap card/section */
 .card {
-  background: var(--color-surface);
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   transition:
     transform 0.3s ease,
-    box-shadow 0.3s ease;
+    border-color 0.3s ease;
   animation: fadeInUp 1s ease-out;
   /* [DIHAPUS] hapus paksaan GPU layer di card — terlalu banyak layer
      membuat Chromium malah men-scan/compositing ulang saat scroll
@@ -151,7 +147,7 @@ body {
 /* Efek hover pada card */
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Animasi fade in up untuk card */
@@ -202,7 +198,7 @@ body {
   margin-bottom: 20px;
   padding: 15px;
   border-left: 3px solid var(--color-primary);
-  background: var(--color-surface-alt);
+  background: var(--bg-surface-alt);
   border-radius: 0 10px 10px 0;
 }
 
@@ -239,7 +235,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background: var(--color-surface-alt);
+  background: var(--bg-surface-alt);
   border-radius: 10px;
   overflow-wrap: break-word;
   transition: background 0.3s ease;
@@ -247,7 +243,7 @@ body {
 
 /* Efek hover pada item kontak */
 .contact-item:hover {
-  background: #e8f0ff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Kelompok label + baris kontak */
@@ -306,7 +302,7 @@ body {
 /* Efek hover pada tombol download */
 .download-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
 }
 
 /* Responsive design untuk tablet */
