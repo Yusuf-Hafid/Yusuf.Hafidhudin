@@ -1,0 +1,358 @@
+/* Reset CSS - menghapus style default browser */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CSS Custom Properties - palet warna yang benar-benar berulang.
+   Nilai yang hanya dipakai satu kali (mis. #e8f0ff, rgba shadow)
+   sengaja dibiarkan literal agar tidak over-abstraksi. */
+:root {
+  --color-primary: #667eea;    /* warna aksen utama (judul, border, gradien) */
+  --color-secondary: #764ba2;  /* warna akhir gradien utama */
+  --color-text: #333;          /* teks utama */
+  --color-text-muted: #666;    /* teks sekunder */
+  --color-surface: #ffffff;    /* latar header & card */
+  --color-surface-alt: #f8f9ff;/* latar item pengalaman & kontak */
+}
+
+/* [BARU] Latar kanvas HTML SOLID — canvas default browser berwarna
+   putih; tanpa ini area putih bocor saat overscroll/rubber-band dan
+   saat tile raster belum siap pada fast scroll (sumber flash putih).
+   overscroll-behavior-y: contain mempertahankan efek bounce khas iOS
+   tetapi tetap mematikan pull-to-refresh yang membocorkan warna
+   kanvas & menginterupsi momentum scroll. */
+html {
+  background-color: var(--color-primary);
+  overscroll-behavior-y: contain;
+  /* [BARU] Reservasi lebar scrollbar agar .container (margin: 0 auto)
+     tidak bergeser horizontal saat scrollbar muncul/hilang. */
+  scrollbar-gutter: stable;
+  /* [BARU] Brute-force: paksa scrollbar selalu ada sehingga lebar viewport tidak pernah berubah saat scroll. Trade-off: scrollbar selalu muncul meski halaman pendek; ada pemborosan ruang sekitar 12-16px di sisi kanan (Chromium default) dan tidak 100% immutable di Brave karena setelan scrollbar terenam bisa mengabaikan properti ini. */
+  overflow-y: scroll;
+}
+
+/* Style untuk body - mengatur font dan background */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  /* [DIUBAH] shorthand `background:` mengosongkan background-color
+     (jadi transparan!); dipisah menjadi background-color solid +
+     background-image gradien agar tidak ada lubang transparan. */
+  background-color: var(--color-primary);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  /* [DIUBAH] 100dvh + fallback 100vh: address bar Safari iOS yang
+     menyusut/tumbuh tidak lagi membuat tinggi body melompat (CLS). */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container utama - membungkus semua konten */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+/* Header section - bagian atas dengan foto dan info utama */
+.header {
+  background: var(--color-surface);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  /* [BARU] Promosikan .header sejak load (bukan saat scroll pertama)
+     agar rasterisasi layer tidak berubah/snap sub-piksel saat scroll.
+     Berlaku walau inline transform dari JS menimpa properti transform. */
+  backface-visibility: hidden;
+}
+
+/* Style untuk foto profil */
+.profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  border: 5px solid var(--color-primary);
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+/* Style untuk gambar di dalam profile-img */
+.profile-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Efek hover pada foto profil */
+.profile-img:hover {
+  transform: scale(1.1);
+}
+
+/* Style untuk nama */
+.name {
+  font-size: 2.5em;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Style untuk jabatan */
+.title {
+  font-size: 1.3em;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* Style untuk deskripsi singkat */
+.description {
+  font-size: 1.1em;
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Grid layout untuk section konten */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* Style untuk setiap card/section */
+.card {
+  background: var(--color-surface);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  animation: fadeInUp 1s ease-out;
+  /* [DIHAPUS] hapus paksaan GPU layer di card — terlalu banyak layer
+     membuat Chromium malah men-scan/compositing ulang saat scroll
+     berhenti. Biarkan fix GPU hanya di .header. */
+}
+
+/* Efek hover pada card */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Animasi fade in up untuk card */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style untuk judul section */
+.card h2 {
+  color: var(--color-text);
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 10px;
+}
+
+/* Style untuk list skill */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Style untuk setiap skill tag */
+.skill-tag {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  transition: transform 0.2s ease;
+}
+
+/* Efek hover pada skill tag */
+.skill-tag:hover {
+  transform: scale(1.05);
+}
+
+/* Style untuk item pengalaman */
+.experience-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-surface-alt);
+  border-radius: 0 10px 10px 0;
+}
+
+/* Style untuk judul pekerjaan */
+.job-title {
+  font-weight: bold;
+  color: var(--color-text);
+  font-size: 1.1em;
+}
+
+/* Style untuk nama perusahaan */
+.company {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* Style untuk periode kerja */
+.period {
+  color: var(--color-text-muted);
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+
+/* Style untuk info kontak */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Style untuk setiap item kontak */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--color-surface-alt);
+  border-radius: 10px;
+  overflow-wrap: break-word;
+  transition: background 0.3s ease;
+}
+
+/* Efek hover pada item kontak */
+.contact-item:hover {
+  background: #e8f0ff;
+}
+
+/* Kelompok label + baris kontak */
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Tulisan label di atas setiap baris kontak (Email / Instagram) */
+.contact-label {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-left: 4px;
+}
+
+/* Logo kontak (SVG inline): ukuran & warna selaras isi card;
+   display block menghilangkan ruang baseline inline yang menggeser
+   garis tengah ikon relatif terhadap teksnya. */
+.contact-item svg.ig-logo,
+.contact-item svg.github-logo {
+  display: block;
+  width: 18px;
+  height: 18px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Tautan baris kontak (compose Gmail untuk email, URL profil
+   Instagram/GitHub): warna teks biasa agar selaras card, garis
+   bawah muncul saat hover agar tetap terlihat sebagai tautan */
+.contact-item a.contact-link {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.contact-item a.contact-link:hover {
+  text-decoration: underline;
+}
+
+/* Style untuk tombol download CV */
+.download-btn {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Efek hover pada tombol download */
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive design untuk tablet */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header {
+    padding: 20px;
+  }
+
+  .name {
+    font-size: 2em;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Responsive design untuk mobile */
+@media (max-width: 480px) {
+  .profile-img {
+    width: 120px;
+    height: 120px;
+    font-size: 50px;
+  }
+
+  .name {
+    font-size: 1.8em;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+/* Aksesibilitas: hormati preferensi pengguna yang mengurangi gerakan.
+   Mematikan animasi masuk dekoratif dari CSS; efek berbasis
+   JavaScript (parallax, tilt card, animasi skill tag) dinonaktifkan
+   dari sisi script.js agar tidak tertutup style inline. */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .card {
+    animation: none;
+  }
+}
