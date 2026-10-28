@@ -142,18 +142,26 @@ body {
   border-radius: 15px;
   padding: 30px;
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease;
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   animation: fadeInUp 1s ease-out;
-  /* [DIHAPUS] hapus paksaan GPU layer di card — terlalu banyak layer
-     membuat Chromium malah men-scan/compositing ulang saat scroll
-     berhenti. Biarkan fix GPU hanya di .header. */
+  /* GPU hard-lock: paksa card punya compositing layer sendiri agar
+     posisinya tidak men-snap saat Chromium repaint. */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* Efek hover pada card */
+/* Selama tilt, matikan transisi CSS agar transform dari JS tidak
+   bertabrakan dengan transisi apa pun. */
+.card.is-tilting {
+  transition: none !important;
+}
+
+/* Hover hanya mengubah border dan shadow — lift/scale ditangani JS. */
 .card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
 /* Animasi fade in up untuk card */

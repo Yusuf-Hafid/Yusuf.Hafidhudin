@@ -157,30 +157,107 @@
     );
   }
 
-  // Fungsi untuk menambah interaktivitas pada card (efek tilt)
+  // Efek tilt 3D dengan rAF + lerp. JS menulis transform penuh,
+  // CSS hanya menyediakan hard-lock layer GPU untuk card.
   function initCardTiltEffect() {
     if (prefersReducedMotion) return;
 
+    const LERP_FACTOR = 0.18;
+    const SNAP_THRESHOLD = 0.01;
+    const HOVER_LIFT = -5;
+
     document.querySelectorAll(".card").forEach(function (card) {
-      // Efek tilt saat mouse bergerak di atas card
+      let targetRotateX = 0;
+      let targetRotateY = 0;
+      let targetTranslateY = 0;
+
+      let currentRotateX = 0;
+      let currentRotateY = 0;
+      let currentTranslateY = 0;
+      let tiltRafId = 0;
+
+      function renderTilt() {
+        tiltRafId = 0;
+
+        currentRotateX += (targetRotateX - currentRotateX) * LERP_FACTOR;
+        currentRotateY += (targetRotateY - currentRotateY) * LERP_FACTOR;
+        currentTranslateY +=
+          (targetTranslateY - currentTranslateY) * LERP_FACTOR;
+
+        if (Math.abs(targetRotateX - currentRotateX) < SNAP_THRESHOLD) {
+          currentRotateX = targetRotateX;
+        }
+        if (Math.abs(targetRotateY - currentRotateY) < SNAP_THRESHOLD) {
+          currentRotateY = targetRotateY;
+        }
+        if (Math.abs(targetTranslateY - currentTranslateY) < SNAP_THRESHOLD) {
+          currentTranslateY = targetTranslateY;
+        }
+
+        // translate3d di akhir menjaga card tetap di layer GPU.
+        card.style.transform = `perspective(1000px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translate3d(0, ${currentTranslateY.toFixed(2)}px, 0)`;
+
+        const isSettled =
+          currentRotateX === targetRotateX &&
+          currentRotateY === targetRotateY &&
+          currentTranslateY === targetTranslateY;
+
+        if (!isSettled) {
+          tiltRafId = window.requestAnimationFrame(renderTilt);
+          return;
+        }
+
+        // Setelah leave dan nilai menyentuh 0, lepas inline transform
+        // agar card kembali ke base translateZ(0) tanpa layer sisa.
+        if (!card.classList.contains("is-tilting")) {
+          card.style.transform = "";
+        }
+      }
+
+      function startTiltLoop() {
+        if (!tiltRafId) {
+          tiltRafId = window.requestAnimationFrame(renderTilt);
+        }
+      }
+
+      function activateTilt() {
+        if (!card.classList.contains("is-tilting")) {
+          card.classList.add("is-tilting");
+          targetTranslateY = HOVER_LIFT;
+        }
+      }
+
+      // Mouse masuk: abaikan event yang terpicu scroll (pointer diam).
+      card.addEventListener("mouseenter", function (e) {
+        if (e.movementX === 0 && e.movementY === 0) return;
+        activateTilt();
+        startTiltLoop();
+      });
+
+      // Mouse bergerak: guard anti hover-palsu saat scroll, lalu hitung
+      // posisi relatif card memakai clientX/clientY (bukan offset child).
       card.addEventListener("mousemove", function (e) {
+        if (e.movementX === 0 && e.movementY === 0) return;
+
+        // Fallback bila mouseenter terpicu scroll dan diabaikan.
+        activateTilt();
+
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (centerX - x) / 10;
-
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+        targetRotateX = (y - rect.height / 2) / 10;
+        targetRotateY = (rect.width / 2 - x) / 10;
+        startTiltLoop();
       });
 
-      // Reset transform saat mouse keluar dari card
+      // Mouse keluar: reset target, biarkan lerp menurunkan card mulus.
       card.addEventListener("mouseleave", function () {
-        card.style.transform =
-          "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+        card.classList.remove("is-tilting");
+        targetRotateX = 0;
+        targetRotateY = 0;
+        targetTranslateY = 0;
+        startTiltLoop();
       });
     });
   }
